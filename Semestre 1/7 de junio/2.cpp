@@ -1,9 +1,9 @@
 #include <iostream>
-#include <fstream> // Para flujo de archivos (ofstream, ifstream)
+#include <fstream>
+#include <string>
 
 using namespace std;
 
-// Estructura para almacenar la información de un contacto
 struct Contacto {
     string nombre;
     int edad;
@@ -13,7 +13,6 @@ struct Contacto {
 };
 
 int main() {
-    // Crear un arreglo de 5 contactos
     Contacto contactos[5];
 
     cout << "Por favor ingrese la siguiente información para cada contacto:\n";
@@ -32,9 +31,15 @@ int main() {
     }
 
     // Guardar los contactos en el archivo agenda.dat
-    ofstream archivo("agenda.dat", ios::binary); // Abrir archivo para escritura binaria
+    ofstream archivo("agenda.dat");
     if (archivo.is_open()) {
-        archivo.write(reinterpret_cast<char*>(&contactos), sizeof(contactos)); // Escribe los datos en el archivo
+        for (const auto& contacto : contactos) {
+            archivo << contacto.nombre << endl;
+            archivo << contacto.edad << endl;
+            archivo << contacto.direccion << endl;
+            archivo << contacto.ciudad << endl;
+            archivo << contacto.telefono << endl;
+        }
         archivo.close();
         cout << "Registros guardados en agenda.dat correctamente.\n";
     } else {
@@ -42,21 +47,18 @@ int main() {
     }
 
     // Leer los contactos desde el archivo y mostrarlos en pantalla
-    ifstream archivoLectura("agenda.dat", ios::binary); // Abrir archivo para lectura binaria
+    ifstream archivoLectura("agenda.dat");
     if (archivoLectura.is_open()) {
-        Contacto contactosLeidos[5];
-        archivoLectura.read(reinterpret_cast<char*>(&contactosLeidos), sizeof(contactosLeidos)); // Leer los datos
-        archivoLectura.close();
-
-        cout << "\nRegistros almacenados en agenda.dat:\n";
-        for (int i = 0; i < 5; i++) {
-            cout << "Contacto n°" << i + 1 << "\n";
-            cout << "Nombre: " << contactosLeidos[i].nombre << "\n";
-            cout << "Edad: " << contactosLeidos[i].edad << "\n";
-            cout << "Dirección: " << contactosLeidos[i].direccion << "\n";
-            cout << "Ciudad: " << contactosLeidos[i].ciudad << "\n";
-            cout << "Teléfono: " << contactosLeidos[i].telefono << "\n\n";
+        Contacto contactoLeido;
+        while (archivoLectura >> contactoLeido.nombre >> contactoLeido.edad >> contactoLeido.direccion >> contactoLeido.ciudad >> contactoLeido.telefono) {
+            // Mostrar los datos leídos
+            cout << "Nombre: " << contactoLeido.nombre << "\n";
+            cout << "Edad: " << contactoLeido.edad << "\n";
+            cout << "Dirección: " << contactoLeido.direccion << "\n";
+            cout << "Ciudad: " << contactoLeido.ciudad << "\n";
+            cout << "Teléfono: " << contactoLeido.telefono << "\n\n";
         }
+        archivoLectura.close();
     } else {
         cout << "Error al abrir el archivo para lectura.\n";
     }
