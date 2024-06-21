@@ -5,45 +5,49 @@
 
 using namespace std;
 
+float capital;
+
 // Estructura para representar un ingrediente
 struct Ingrediente {
     int ID;
     string nombre;
     string unidad; // Unidad de medida (por ejemplo, "Peso" o "Unidad")
     float cantidad; // Costo del ingrediente
+    float costo;
 };
 
 vector<Ingrediente> inventario = {
-    {1, "Masa", "kg", 0.0},
-    {2, "Pepperoni", "unidad(es)", 0.0},
-    {3, "Queso", "kg", 0.0},
-    {4, "Aceitunas", "unidad(es)", 0.0},
-    {5, "Jamón", "unidad(es)", 0.0},
-    {6, "Piña", "unidad(es)", 0.0},
-    {7, "Hongos", "unidad(es)", 0.0},
-    {8, "Pimiento verde", "unidad(es)", 0.0},
-    {9, "Salchicha", "unidad(es)", 0.0}
+    {1, "Masa", "kg", 0.0, 1.0},
+    {2, "Pepperoni", "unidad(es)", 0.0, 1.0},
+    {3, "Queso", "kg", 0.0, 1.0},
+    {4, "Aceitunas", "unidad(es)", 0.0, 1.0},
+    {5, "Jamón", "unidad(es)", 0.0, 1.0},
+    {6, "Piña", "unidad(es)", 0.0, 1.0},
+    {7, "Hongos", "unidad(es)", 0.0, 1.0},
+    {8, "Pimiento verde", "unidad(es)", 0.0, 1.0},
+    {9, "Salchicha", "unidad(es)", 0.0, 1.0}
 };
 
 struct Pizza {
     string nombre;
     string tamaño;
     vector<pair<int, float>> ingredientes; // Lista de pares (ID del ingrediente, cantidad necesaria)
+    float costo;
 };
 
 vector<Pizza> pizzas = {
-    {"Pepperoni", "Personal", {{1, /*Masa*/ 0.25}, {2, /*Pepperoni*/ 8}}},
-    {"Pepperoni", "Estandar", {{1, /*Masa*/ 0.5}, {2, /*Pepperoni*/ 8}}},
-    {"Pepperoni", "Familiar", {{1, /*Masa*/1.0}, {2, /*Pepperoni*/ 8}}},
-    {"Hawaiana", "Personal", {{1 /*Masa*/, 0.25}, {5 /*Jamón*/, 3}, {6 /*Piña*/, 3}}},
-    {"Hawaiana", "Estandar", {{1 /*Masa*/, 0.5}, {5 /*Jamón*/, 6}, {6 /*Piña*/, 6}}},
-    {"Hawaiana", "Familiar", {{1 /*Masa*/, 1.0}, {5 /*Jamón*/, 9}, {6 /*Piña*/, 9}}},
-    {"Carnívora", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Pepperoni*/, 8}, {9 /*Salchicha*/, 3}, {5 /*Jamón*/, 3}}},
-    {"Carnívora", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Pepperoni*/, 16}, {9 /*Salchicha*/, 6}, {5 /*Jamón*/, 6}}},
-    {"Carnívora", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Pepperoni*/, 24}, {9 /*Salchicha*/, 9}, {5 /*Jamón*/, 9}}},
-    {"Vegetariana", "Personal", {{1 /*Masa*/, 0.25}, {7 /*Hongos*/, 5}, {8 /*Pimiento verde*/, 3}, {4 /*Aceitunas*/, 10}}},
-    {"Vegetariana", "Estandar", {{1 /*Masa*/, 0.5}, {7 /*Hongos*/, 10}, {8 /*Pimiento verde*/, 6}, {4 /*Aceitunas*/, 20}}},
-    {"Vegetariana", "Familiar", {{1 /*Masa*/, 1.0}, {7 /*Hongos*/, 15}, {8 /*Pimiento verde*/, 9}, {4 /*Aceitunas*/, 30}}}
+    {"Pepperoni", "Personal", {{1, /*Masa*/ 0.25}, {2, /*Pepperoni*/ 8}}, 50.0},
+        {"Pepperoni", "Estandar", {{1, /*Masa*/ 0.5}, {2, /*Pepperoni*/ 8}}, 75.0},
+        {"Pepperoni", "Familiar", {{1, /*Masa*/ 1.0}, {2, /*Pepperoni*/ 8}}, 100.0},
+        {"Hawaiana", "Personal", {{1 /*Masa*/, 0.25}, {5 /*Jamón*/, 3}, {6 /*Piña*/, 3}}, 60.0},
+        {"Hawaiana", "Estandar", {{1 /*Masa*/, 0.5}, {5 /*Jamón*/, 6}, {6 /*Piña*/, 6}}, 90.0},
+        {"Hawaiana", "Familiar", {{1 /*Masa*/, 1.0}, {5 /*Jamón*/, 9}, {6 /*Piña*/, 9}}, 120.0},
+        {"Carnívora", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Pepperoni*/, 8}, {9 /*Salchicha*/, 3}, {5 /*Jamón*/, 3}}, 65.0},
+        {"Carnívora", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Pepperoni*/, 16}, {9 /*Salchicha*/, 6}, {5 /*Jamón*/, 6}}, 95.0},
+        {"Carnívora", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Pepperoni*/, 24}, {9 /*Salchicha*/, 9}, {5 /*Jamón*/, 9}}, 125.0},
+        {"Vegetariana", "Personal", {{1 /*Masa*/, 0.25}, {7 /*Hongos*/, 5}, {8 /*Pimiento verde*/, 3}, {4 /*Aceitunas*/, 10}}, 55.0},
+        {"Vegetariana", "Estandar", {{1 /*Masa*/, 0.5}, {7 /*Hongos*/, 10}, {8 /*Pimiento verde*/, 6}, {4 /*Aceitunas*/, 20}}, 85.0},
+        {"Vegetariana", "Familiar", {{1 /*Masa*/, 1.0}, {7 /*Hongos*/, 15}, {8 /*Pimiento verde*/, 9}, {4 /*Aceitunas*/, 30}}, 115.0}
 };
 
 // Función para agregar unidades de un ingrediente
@@ -64,18 +68,54 @@ int main() {
         cout << "\n-----------------------------\n";
         cout << "Comandos\n";
         cout << "-----------------------------\n";
-        cout << "1.\tAgregar ingredientes\n";
-        cout << "2.\tRevisar inventario\n";
-        cout << "3.\tGestionar caducidad\n";
-        cout << "4.\tCocinar\n";
+        cout << "1.\tGestionar capital\n";
+        cout << "2.\tAgregar ingredientes\n";
+        cout << "3.\tRevisar inventario\n";
+        cout << "4.\tGestionar caducidad\n";
+        cout << "5.\tCocinar\n";
+        cout << "6.\tHistorial\n";
         cout << "0.\tSalir\n";
         cout << "-----------------------------\n";
         cout << "Seleccione una opción: ";
         cin >> opcion;
 
         switch (opcion) {
-            // Agregar ingredientes
+            // Gestionar capital
             case 1:
+            {
+                cout << "\n-----------------------------\n";
+                cout << "Capital disponible: " << capital << "\n";
+                cout << "1.\tAgregar capital\n";
+                cout << "2.\tRestar capital\n";
+                cout << "3.\tContinuar\n";
+                cout << "Seleccione una opción: ";
+                int subopcion;
+                cin >> subopcion;
+                switch (subopcion) {
+                    case 1:
+                        float agregar;
+                        cout << "Ingrese la cantidad a agregar: ";
+                        cin >> agregar;
+                        capital += agregar;
+                        break;
+                    case 2:
+                        float restar;
+                        cout << "Ingrese la cantidad a restar: ";
+                        cin >> restar;
+                        capital -= restar;
+                        break;
+                    case 3:
+                        // Continuar sin cambios
+                        break;
+                    default:
+                        cout << "Opción inválida.\n";
+                }
+                cout << "Nuevo capital: " << capital << "\n";
+                cout << "-----------------------------\n";
+            }
+                break;
+            // Agregar ingredientes
+            case 2:
                 {
                     cout << "\n------------------------------------------\nQue ingredientes quieres agregar?\n------------------------------------------\n";
                     for (size_t i = 0; i < inventario.size(); ++i) {
@@ -93,10 +133,14 @@ int main() {
                     cout << "Cuántos(as) " << inventario[seleccion - 1].unidad << " deseas agregar? ";
                     cin >> cantidad;
                     agregarUnidades(inventario, seleccion - 1, cantidad);
+                    // Restar el capital
+                    float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
+                    capital -= costoIngrediente;
+                    cout << "Se restaron $" << costoIngrediente << " del capital.\n";
                 }
                 break;
             // Revisar inventario
-            case 2:
+            case 3:
                 {
                 cout << "\n------------------------------------------\nInventario de ingredientes\n------------------------------------------\n";
                 cout << setw(14) << "Ingrediente" << setw(10) << "Cantidad" << setw(15) << "Unidad" << "\n";
@@ -107,11 +151,11 @@ int main() {
                 cout << "------------------------------------------\n";
                 }
                 break;
-            // Gestionr caducidad
-            case 3:
+            // Gestionar caducidad
+            case 4:
                 break;
             // Cocinar
-           case 4:
+           case 5:
                 {
                 cout << "\n------------------------------------------\nMenu de pizzas\n------------------------------------------\n";
                 for (size_t i = 0; i < pizzas.size(); ++i) {
@@ -132,13 +176,16 @@ int main() {
                     }
                 }
                 if (ingredientesDisponibles) {
-                    for (const auto& ing : pizzas[seleccionPizza - 1].ingredientes) {
+                for (const auto& ing : pizzas[seleccionPizza - 1].ingredientes) {
                     inventario[ing.first - 1].cantidad -= ing.second;
-                    }
-                    cout << "La pizza " << pizzas[seleccionPizza - 1].nombre << " está en el horno.\n";
-                } else {
-                    cout << "No se puede cocinar la pizza por falta de ingredientes.\n";
                 }
+            capital += pizzas[seleccionPizza - 1].costo;
+                cout << "La pizza " << pizzas[seleccionPizza - 1].nombre << " está en el horno.\n";
+                cout << "Se agregaron $" << pizzas[seleccionPizza - 1].costo << " al capital.\n";
+                }
+                else {
+                cout << "No se puede cocinar la pizza por falta de ingredientes.\n";
+                    }
                 }
                 break;
             // Validacion
