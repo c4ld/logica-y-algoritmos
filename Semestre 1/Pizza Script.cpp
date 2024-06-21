@@ -123,7 +123,7 @@ int main() {
                     }
                     cout << "------------------------------------------\n";
                     size_t seleccion;
-                    cout << "Selecciona el numero del ingrediente: 2";
+                    cout << "Selecciona el numero del ingrediente: ";
                     cin >> seleccion;
                     if(seleccion < 1 || seleccion > inventario.size()) {
                         cout << "\tOpción no válida. Intente nuevamente.\n";
