@@ -96,8 +96,8 @@ int main() {
         cout << "5.\tCocinar\n";
         cout << "6.\tGestionar caducidad\n\n";
 
-        cout << "7.\tBuscar\n";
-        cout << "8.\tHistorial\n\n";
+        cout << "7.\tHistorial\n";
+        cout << "8.\tBuscar\n\n";
 
         cout << "0.\tSalir\n";
         cout << "-----------------------------\n";
