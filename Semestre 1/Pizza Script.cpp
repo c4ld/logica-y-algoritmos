@@ -15,19 +15,20 @@ struct Ingrediente {
     string nombre;
     string unidad; // Unidad de medida (por ejemplo, "Peso" o "Unidad")
     float costo; // Costo del ingrediente
+    float min;
     float cantidad;
 };
 
 vector<Ingrediente> inventario = {
-    {1, "Masa", "kg", 1.0, 0.0},
-    {2, "Pepperoni", "unidad(es)", 1.0, 0.0},
-    {3, "Queso", "kg", 1.0, 0.0},
-    {4, "Aceitunas", "unidad(es)", 1.0, 0.0},
-    {5, "Jamón", "unidad(es)", 1.0, 0.0},
-    {6, "Piña", "unidad(es)", 1.0, 0.0},
-    {7, "Hongos", "unidad(es)", 1.0, 0.0},
-    {8, "Pimiento verde", "unidad(es)", 1.0, 0.0},
-    {9, "Salchicha", "unidad(es)", 1.0, 0.0}
+    {1, "Masa", "kg", 1.0, 50, 0.0},
+    {2, "Pepperoni", "unidad(es)", 1.0, 20, 0.0},
+    {3, "Queso", "kg", 1.0, 50, 0.0},
+    {4, "Aceitunas", "unidad(es)", 1.0, 20, 0.0},
+    {5, "Jamón", "unidad(es)", 1.0, 30, 0.0},
+    {6, "Piña", "unidad(es)", 1.0, 10, 0.0},
+    {7, "Hongos", "unidad(es)", 1.0, 15, 0.0},
+    {8, "Pimiento verde", "unidad(es)", 1.0, 10, 0.0},
+    {9, "Salchicha", "unidad(es)", 1.0, 15, 0.0}
 };
 
 struct Pizza {
@@ -91,11 +92,12 @@ int main() {
         cout << "2.\tRestar saldo\n\n";
 
         cout << "3.\tRevisar stock\n";
-        cout << "4.\tCocinar\n";
-        cout << "5.\tGestionar caducidad\n\n";
+        cout << "4.\tComprar ingredientes\n";
+        cout << "5.\tCocinar\n";
+        cout << "6.\tGestionar caducidad\n\n";
 
-        cout << "6.\tBuscar\n";
-        cout << "7.\tHistorial\n\n";
+        cout << "7.\tBuscar\n";
+        cout << "8.\tHistorial\n\n";
 
         cout << "0.\tSalir\n";
         cout << "-----------------------------\n";
@@ -121,18 +123,50 @@ int main() {
                 break;
             }
             case 3: { // Revisar inventario
-                cout << "\n-----------------------------\n";
-                cout << "Inventario\n";
-                cout << "-----------------------------\n";
-                cout << setw(14) << "Ingrediente" << setw(10) << "Cantidad" << setw(15) << "Unidad" << "\n";
-                cout << "------------------------------------------\n";
-                for (const auto& ingrediente : inventario) {
-                    cout << setw(14) << ingrediente.nombre << setw(10) << ingrediente.cantidad << setw(15) << ingrediente.unidad <<"\n";
-                }
-                cout << "------------------------------------------\n";
+                    cout << "\n----------------------------------------------------------\n";
+                    cout << "Inventario\n";
+                    cout << "----------------------------------------------------------\n";
+                    cout << setw(14) << "Ingrediente" << setw(10) << "Cantidad" << setw(15) << "Unidad" << setw(10) << "Stock" << setw(10) << "Costo\n";
+                    cout << "------------------------------------------\n";
+                    float costoTotal = 0.0;
+                    for (const auto& ingrediente : inventario) {
+                        cout << setw(14) << ingrediente.nombre << setw(10) << ingrediente.cantidad << setw(15) << ingrediente.unidad;
+                        if (ingrediente.cantidad < ingrediente.min) {
+                            cout << setw(12) << "BAJO!" << setw(10) << "$0.00\n";
+                        } else {
+                            float costoIngrediente = ingrediente.costo * ingrediente.cantidad;
+                            costoTotal += costoIngrediente; // Agregar al costo total
+                            cout << setw(12) << "Bien" << setw(10) << "$" << fixed << setprecision(2) << costoIngrediente << "\n";
+                        }
+                    }
+                    cout << "------------------------------------------\n";
+                    cout << "Costo total: $" << fixed << setprecision(2) << costoTotal << "\n"; // Mostrar el costo total
                 break;
             }
-            case 4: { // Cocinar
+            case 4: { // Agregar ingredientes
+                    cout << "\n------------------------------------------\nQue ingredientes quieres agregar?\n------------------------------------------\n";
+                    for (size_t i = 0; i < inventario.size(); ++i) {
+                        cout << i + 1 << ".\t" << inventario[i].nombre << "\n";
+                    }
+                    cout << "------------------------------------------\n";
+                    size_t seleccion;
+                    cout << "Selecciona el numero del ingrediente: ";
+                    cin >> seleccion;
+                    if(seleccion < 1 || seleccion > inventario.size()) {
+                        cout << "\tOpción no válida. Intente nuevamente.\n";
+                        break;
+                    }
+                    int cantidad;
+                    cout << "Cuántos(as) " << inventario[seleccion - 1].unidad << " deseas agregar? ";
+                    cin >> cantidad;
+                    agregarUnidades(inventario, seleccion - 1, cantidad);
+                    // Restar el capital
+                    float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
+                    saldo -= costoIngrediente;
+                    cout << "Se restaron $" << costoIngrediente << " del capital.\n";
+                break;
+            }
+            case 5: { // Cocinar
                 cout << "\n-----------------------------\n";
                 cout << "Menu\n";
                 cout << "-----------------------------\n";
@@ -168,10 +202,10 @@ int main() {
                 }
                 break;
             }
-            case 5: { // Gestionar caducidad
+            case 6: { // Gestionar caducidad
                 break;
             }
-            case 6: { // Historial
+            case 7: { // Historial
                 cout << "\n-----------------------------\n";
                 cout << "Historial\n";
                 cout << "-----------------------------\n";
@@ -182,7 +216,7 @@ int main() {
                 cout << "------------------------------------------\n";
                 break;
             }
-            case 7: { // Buscar
+            case 8: { // Buscar
                 break;
             }
             default:
