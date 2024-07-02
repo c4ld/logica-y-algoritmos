@@ -147,10 +147,9 @@ int main() {
         cout << "3.\tRevisar stock\n";
         cout << "4.\tComprar ingredientes\n";
         cout << "5.\tCocinar\n";
-        cout << "6.\tGestionar caducidad\n\n";
 
-        cout << "7.\tHistorial\n";
-        cout << "8.\tBuscar\n\n";
+        cout << "6.\tHistorial\n";
+        cout << "7.\tBuscar\n\n";
 
         cout << "0.\tSalir\n";
         cout << "-----------------------------\n";
@@ -271,10 +270,7 @@ int main() {
     }
     break;
 }
-            case 6: { // Gestionar caducidad
-                break;
-            }
-            case 7: { // Historial
+            case 6: { // Historial
                 cout << "\n-----------------------------\n";
                 cout << "Historial\n";
                 cout << "-----------------------------\n";
@@ -285,7 +281,7 @@ int main() {
                 cout << "------------------------------------------\n";
                 break;
             }
-            case 8: { // Buscar
+            case 7: { // Buscar
                 cin.ignore(); // Limpiar el buffer de entrada
                 // Obtener fechas desde y hasta el usuario
                 chrono::system_clock::time_point desde = obtenerFechaUsuario("Ingrese la fecha desde");
