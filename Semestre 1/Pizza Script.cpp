@@ -200,55 +200,73 @@ int main() {
                 }
             }
             case 3: { // Revisar inventario
-                    cout << "\n----------------------------------------------------------\n";
-                    cout << "Inventario\n";
-                    cout << "----------------------------------------------------------\n";
-                    cout << setw(14) << "Ingrediente" << setw(10) << "Cantidad" << setw(15) << "Unidad" << setw(10) << "Stock" << setw(10) << "Costo\n";
-                    cout << "------------------------------------------\n";
-                    float costoTotal = 0.0;
-                    for (const auto& ingrediente : inventario) {
-                        cout << setw(14) << ingrediente.nombre << setw(10) << ingrediente.cantidad << setw(15) << ingrediente.unidad;
-                        if (ingrediente.cantidad < ingrediente.min) {
-                            cout << setw(12) << "BAJO!" << setw(10) << "$0.00\n";
-                        } else {
-                            float costoIngrediente = ingrediente.costo * ingrediente.cantidad;
-                            costoTotal += costoIngrediente; // Agregar al costo total
-                            cout << setw(12) << "Bien" << setw(10) << "$" << fixed << setprecision(2) << costoIngrediente << "\n";
-                        }
-                    }
-                    cout << "------------------------------------------\n";
-                    cout << "Costo total: $" << fixed << setprecision(2) << costoTotal << "\n"; // Mostrar el costo total
-                break;
-            }
+    cout << "\n----------------------------------------------------------\n";
+    cout << "Inventario\n";
+    cout << "----------------------------------------------------------\n";
+    cout << setw(14) << "Ingrediente" << setw(10) << "Cantidad" << setw(15) << "Unidad" << setw(10) << "Stock" << setw(10) << "Costo\n";
+    cout << "------------------------------------------\n";
+    float costoTotal = 0.0;
+    float inversionTotalNecesaria = 0.0; // Variable para acumular la inversión total necesaria
+    for (const auto& ingrediente : inventario) {
+        cout << setw(14) << ingrediente.nombre << setw(10) << ingrediente.cantidad << setw(15) << ingrediente.unidad;
+        if (ingrediente.cantidad < ingrediente.min) {
+            float cantidadNecesaria = ingrediente.min - ingrediente.cantidad;
+            float inversionNecesaria = cantidadNecesaria * ingrediente.costo;
+            inversionTotalNecesaria += inversionNecesaria; // Acumular la inversión necesaria
+            cout << setw(12) << "BAJO!" << setw(10) << "$" << fixed << setprecision(2) << inversionNecesaria << "\n";
+        } else {
+            float costoIngrediente = ingrediente.costo * ingrediente.cantidad;
+            costoTotal += costoIngrediente; // Agregar al costo total
+            cout << setw(12) << "Bien" << setw(10) << "$" << fixed << setprecision(2) << costoIngrediente << "\n";
+        }
+    }
+    cout << "------------------------------------------\n";
+    cout << "Costo total: $" << fixed << setprecision(2) << costoTotal << "\n"; // Mostrar el costo total
+    cout << "Inversión total necesaria para superar el stock mínimo: $" << fixed << setprecision(2) << inversionTotalNecesaria << "\n"; // Mostrar la inversión total necesaria
+    break;
+}
+
             case 4: { // Agregar ingredientes
-                    cout << "\n------------------------------------------\nQue ingredientes quieres agregar?\n------------------------------------------\n";
-                     cout << setw(3) << "ID"
-                    << setw(20) << "Nombre"
-                    << setw(20) << "Costo\n";
-                    for (size_t i = 0; i < inventario.size(); ++i) {
-                        cout << setw(3) << i + 1 << ". "
-                        << setw(20) << inventario[i].nombre 
-                        << setw(10) << inventario[i].costo
-                        << setw (10) << "por"
-                        << setw (10) << inventario[i].unidad << "\n";
-                    }
-                    cout << "------------------------------------------\n";
-                    size_t seleccion;
-                    cout << "Selecciona el numero del ingrediente: ";
-                    cin >> seleccion;
-                    if(seleccion < 1 || seleccion > inventario.size()) {
-                        cout << "\tOpción no válida. Intente nuevamente.\n";
-                        break;
-                    }
-                    int cantidad;
-                    cout << "Cuántos(as) " << inventario[seleccion - 1].unidad << " deseas agregar? ";
-                    cin >> cantidad;
-                    agregarUnidades(inventario, seleccion - 1, cantidad);
-                    // Restar el capital
-                    float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
-                    cout << "Se restaron $" << costoIngrediente << " del capital.\n";
-                break;
-            }
+    cout << "\n------------------------------------------\nQue ingredientes quieres agregar?\n------------------------------------------\n";
+    cout << setw(3) << "ID"
+         << setw(20) << "Nombre"
+         << setw(20) << "Costo\n";
+    for (size_t i = 0; i < inventario.size(); ++i) {
+        cout << setw(3) << i + 1 << ". "
+             << setw(20) << inventario[i].nombre 
+             << setw(10) << inventario[i].costo
+             << setw (10) << "por"
+             << setw (10) << inventario[i].unidad << "\n";
+    }
+    cout << "------------------------------------------\n";
+    size_t seleccion;
+    cout << "Selecciona el numero del ingrediente: ";
+    cin >> seleccion;
+    if(seleccion < 1 || seleccion > inventario.size()) {
+        cout << "\tOpción no válida. Intente nuevamente.\n";
+        break;
+    }
+    int cantidad;
+    cout << "Cuántos(as) " << inventario[seleccion - 1].unidad << " deseas agregar? ";
+    cin >> cantidad;
+    
+    // Calcular el costo total del ingrediente
+    float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
+    
+    // Validar si hay suficiente capital
+    if (saldo < costoIngrediente) {
+        cout << "No tienes suficiente saldo para realizar esta compra. Necesitas $" << costoIngrediente << " pero solo tienes $" << saldo << ".\n";
+        break;
+    }
+    
+    // Si hay suficiente capital, realizar la compra
+    agregarUnidades(inventario, seleccion - 1, cantidad);
+    
+    // Restar el capital
+    saldo -= costoIngrediente;
+    cout << "Se restaron $" << costoIngrediente << " del capital. Capital restante: $" << saldo << ".\n";
+    break;
+}
             case 5: { // Cocinar
                 cout << "\n-----------------------------\n";
                 cout << "Menu\n";
