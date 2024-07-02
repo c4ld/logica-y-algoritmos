@@ -15,6 +15,7 @@ struct Ingrediente {
     string unidad; // Unidad de medida (por ejemplo, "Peso" o "Unidad")
     float costo; // Costo del ingrediente
     float min; // Si la cantidad es menor a 'min', se considera stock bajo
+    float max; // Si la cantidad es mayor a 'max', se considera sobrestock
     float cantidad;
 };
 
@@ -28,16 +29,16 @@ struct Pizza {
 
 // Inventario de ingredientes
 vector<Ingrediente> inventario = {
-    {1, "Masa", "kg", 2.0, 10, 0.0},
-    {2, "Tomate", "kg", 1.5, 5, 0.0},
-    {3, "Queso", "kg", 3.0, 8, 0.0},
-    {4, "Pepperoni", "unidad(es)", 0.8, 3, 0.0},
-    {5, "Aceitunas", "unidad(es)", 0.5, 2, 0.0},
-    {6, "Jamón", "unidad(es)", 1.2, 4, 0.0},
-    {7, "Piña", "unidad(es)", 1.0, 3, 0.0},
-    {8, "Hongos", "unidad(es)", 0.7, 2, 0.0},
-    {9, "Pimiento verde", "unidad(es)", 0.8, 2, 0.0},
-    {10, "Salchicha", "unidad(es)", 1.0, 3, 0.0}
+    {1, "Masa", "kg", 2.0, 10, 40, 0.0},
+    {2, "Tomate", "kg", 1.5, 5, 20, 0.0},
+    {3, "Queso", "kg", 3.0, 8, 16, 0.0},
+    {4, "Pepperoni", "unidad(es)", 0.8, 3, 30, 0.0},
+    {5, "Aceitunas", "unidad(es)", 0.5, 2, 20, 0.0},
+    {6, "Jamón", "unidad(es)", 1.2, 4, 40, 0.0},
+    {7, "Piña", "unidad(es)", 1.0, 3, 30, 0.0},
+    {8, "Hongos", "unidad(es)", 0.7, 2, 20, 0.0},
+    {9, "Pimiento verde", "unidad(es)", 0.8, 2, 20, 0.0},
+    {10, "Salchicha", "unidad(es)", 1.0, 3, 20, 0.0}
 };
 
 // Lista de pizzas disponibles
@@ -214,6 +215,8 @@ int main() {
             float inversionNecesaria = cantidadNecesaria * ingrediente.costo;
             inversionTotalNecesaria += inversionNecesaria; // Acumular la inversión necesaria
             cout << setw(12) << "BAJO!" << setw(10) << "$" << fixed << setprecision(2) << inversionNecesaria << "\n";
+        } else if (ingrediente.cantidad > ingrediente.max) {
+            cout << setw(12) << "SOBRESTOCK!" << setw(10) << "$0.00\n";
         } else {
             float costoIngrediente = ingrediente.costo * ingrediente.cantidad;
             costoTotal += costoIngrediente; // Agregar al costo total
