@@ -9,28 +9,16 @@ using namespace std;
 
 float saldo;
 
-// Estructura para representar un ingrediente
 struct Ingrediente {
     int ID;
     string nombre;
     string unidad; // Unidad de medida (por ejemplo, "Peso" o "Unidad")
     float costo; // Costo del ingrediente
-    float min;
+    float min; // Si la cantidad es menor a 'min', se considera stock bajo
     float cantidad;
 };
 
-vector<Ingrediente> inventario = {
-    {1, "Masa", "kg", 1.0, 50, 0.0},
-    {2, "Pepperoni", "unidad(es)", 1.0, 20, 0.0},
-    {3, "Queso", "kg", 1.0, 50, 0.0},
-    {4, "Aceitunas", "unidad(es)", 1.0, 20, 0.0},
-    {5, "Jamón", "unidad(es)", 1.0, 30, 0.0},
-    {6, "Piña", "unidad(es)", 1.0, 10, 0.0},
-    {7, "Hongos", "unidad(es)", 1.0, 15, 0.0},
-    {8, "Pimiento verde", "unidad(es)", 1.0, 10, 0.0},
-    {9, "Salchicha", "unidad(es)", 1.0, 15, 0.0}
-};
-
+// Estructura para representar un ingrediente
 struct Pizza {
     string nombre;
     string tamaño;
@@ -38,19 +26,34 @@ struct Pizza {
     float costo;
 };
 
+// Inventario de ingredientes
+vector<Ingrediente> inventario = {
+    {1, "Masa", "kg", 2.0, 10, 0.0},
+    {2, "Tomate", "kg", 1.5, 5, 0.0},
+    {3, "Queso", "kg", 3.0, 8, 0.0},
+    {4, "Pepperoni", "unidad(es)", 0.8, 3, 0.0},
+    {5, "Aceitunas", "unidad(es)", 0.5, 2, 0.0},
+    {6, "Jamón", "unidad(es)", 1.2, 4, 0.0},
+    {7, "Piña", "unidad(es)", 1.0, 3, 0.0},
+    {8, "Hongos", "unidad(es)", 0.7, 2, 0.0},
+    {9, "Pimiento verde", "unidad(es)", 0.8, 2, 0.0},
+    {10, "Salchicha", "unidad(es)", 1.0, 3, 0.0}
+};
+
+// Lista de pizzas disponibles
 vector<Pizza> pizzas = {
-    {"Pepperoni", "Personal", {{1, /*Masa*/ 0.25}, {2, /*Pepperoni*/ 8}}, 50.0},
-    {"Pepperoni", "Estandar", {{1, /*Masa*/ 0.5}, {2, /*Pepperoni*/ 8}}, 75.0},
-    {"Pepperoni", "Familiar", {{1, /*Masa*/ 1.0}, {2, /*Pepperoni*/ 8}}, 100.0},
-    {"Hawaiana", "Personal", {{1 /*Masa*/, 0.25}, {5 /*Jamón*/, 3}, {6 /*Piña*/, 3}}, 60.0},
-    {"Hawaiana", "Estandar", {{1 /*Masa*/, 0.5}, {5 /*Jamón*/, 6}, {6 /*Piña*/, 6}}, 90.0},
-    {"Hawaiana", "Familiar", {{1 /*Masa*/, 1.0}, {5 /*Jamón*/, 9}, {6 /*Piña*/, 9}}, 120.0},
-    {"Carnívora", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Pepperoni*/, 8}, {9 /*Salchicha*/, 3}, {5 /*Jamón*/, 3}}, 65.0},
-    {"Carnívora", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Pepperoni*/, 16}, {9 /*Salchicha*/, 6}, {5 /*Jamón*/, 6}}, 95.0},
-    {"Carnívora", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Pepperoni*/, 24}, {9 /*Salchicha*/, 9}, {5 /*Jamón*/, 9}}, 125.0},
-    {"Vegetariana", "Personal", {{1 /*Masa*/, 0.25}, {7 /*Hongos*/, 5}, {8 /*Pimiento verde*/, 3}, {4 /*Aceitunas*/, 10}}, 55.0},
-    {"Vegetariana", "Estandar", {{1 /*Masa*/, 0.5}, {7 /*Hongos*/, 10}, {8 /*Pimiento verde*/, 6}, {4 /*Aceitunas*/, 20}}, 85.0},
-    {"Vegetariana", "Familiar", {{1 /*Masa*/, 1.0}, {7 /*Hongos*/, 15}, {8 /*Pimiento verde*/, 9}, {4 /*Aceitunas*/, 30}}, 115.0}
+    {"Pepperoni", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Tomate*/, 0.1}, {3 /*Queso*/, 0.2}, {4 /*Pepperoni*/, 8}}, 50.0},
+    {"Pepperoni", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Tomate*/, 0.2}, {3 /*Queso*/, 0.4}, {4 /*Pepperoni*/, 8}}, 75.0},
+    {"Pepperoni", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Tomate*/, 0.4}, {3 /*Queso*/, 0.8}, {4 /*Pepperoni*/, 8}}, 100.0},
+    {"Hawaiana", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Tomate*/, 0.1}, {3 /*Queso*/, 0.2}, {6 /*Jamón*/, 3}, {7 /*Piña*/, 3}}, 60.0},
+    {"Hawaiana", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Tomate*/, 0.2}, {3 /*Queso*/, 0.4}, {6 /*Jamón*/, 6}, {7 /*Piña*/, 6}}, 90.0},
+    {"Hawaiana", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Tomate*/, 0.4}, {3 /*Queso*/, 0.8}, {6 /*Jamón*/, 9}, {7 /*Piña*/, 9}}, 120.0},
+    {"Carnívora", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Tomate*/, 0.1}, {3 /*Queso*/, 0.2}, {4 /*Pepperoni*/, 8}, {9 /*Salchicha*/, 3}, {6 /*Jamón*/, 3}}, 65.0},
+    {"Carnívora", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Tomate*/, 0.2}, {3 /*Queso*/, 0.4}, {4 /*Pepperoni*/, 16}, {9 /*Salchicha*/, 6}, {6 /*Jamón*/, 6}}, 95.0},
+    {"Carnívora", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Tomate*/, 0.4}, {3 /*Queso*/, 0.8}, {4 /*Pepperoni*/, 24}, {9 /*Salchicha*/, 9}, {6 /*Jamón*/, 9}}, 125.0},
+    {"Vegetariana", "Personal", {{1 /*Masa*/, 0.25}, {2 /*Tomate*/, 0.1}, {3 /*Queso*/, 0.2}, {7 /*Hongos*/, 5}, {8 /*Pimiento verde*/, 3}, {5 /*Aceitunas*/, 10}}, 55.0},
+    {"Vegetariana", "Estandar", {{1 /*Masa*/, 0.5}, {2 /*Tomate*/, 0.2}, {3 /*Queso*/, 0.4}, {7 /*Hongos*/, 10}, {8 /*Pimiento verde*/, 6}, {5 /*Aceitunas*/, 20}}, 85.0},
+    {"Vegetariana", "Familiar", {{1 /*Masa*/, 1.0}, {2 /*Tomate*/, 0.4}, {3 /*Queso*/, 0.8}, {7 /*Hongos*/, 15}, {8 /*Pimiento verde*/, 9}, {5 /*Aceitunas*/, 30}}, 115.0}
 };
 
 // Función para agregar unidades de un ingrediente
@@ -78,6 +81,56 @@ struct Accion {
 };
 
 vector<Accion> historial;
+
+// Función para imprimir una acción
+void imprimirAccion(const Accion& accion) {
+    time_t tiempo = chrono::system_clock::to_time_t(accion.tiempo);
+    cout << "[" << put_time(localtime(&tiempo), "%Y-%m-%d %H:%M:%S") << "] " << accion.descripcion << endl;
+}
+
+// Función para buscar y mostrar acciones en un rango de fechas
+void buscarEnHistorial(const chrono::system_clock::time_point& desde, const chrono::system_clock::time_point& hasta) {
+    cout << "Acciones realizadas entre ";
+    auto desde_time_t = chrono::system_clock::to_time_t(desde);
+    auto hasta_time_t = chrono::system_clock::to_time_t(hasta);
+
+    cout << put_time(localtime(&desde_time_t), "%Y-%m-%d %H:%M:%S") << " y ";
+    cout << put_time(localtime(&hasta_time_t), "%Y-%m-%d %H:%M:%S") << ":\n";
+
+    bool encontrado = false;
+    for (const auto& accion : historial) {
+        auto accion_time_t = chrono::system_clock::to_time_t(accion.tiempo);
+        if (accion_time_t >= desde_time_t && accion_time_t <= hasta_time_t) {
+            imprimirAccion(accion);
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontraron acciones en el rango especificado.\n";
+    }
+}
+
+// Función para obtener y validar una fecha del usuario
+chrono::system_clock::time_point obtenerFechaUsuario(const string& mensaje) {
+    string inputFecha;
+    chrono::system_clock::time_point fecha;
+    while (true) {
+        cout << mensaje << " (YYYY-MM-DD HH:MM:SS): ";
+        getline(cin, inputFecha);
+        stringstream ss(inputFecha);
+        tm tmFecha = {};
+        ss >> get_time(&tmFecha, "%Y-%m-%d %H:%M:%S");
+        if (ss.fail()) {
+            cout << "Formato de fecha incorrecto. Inténtelo de nuevo.\n";
+            continue;
+        }
+        time_t tiempo = mktime(&tmFecha);
+        fecha = chrono::system_clock::from_time_t(tiempo);
+        break;
+    }
+    return fecha;
+}
 
 int main() {
     
@@ -145,8 +198,15 @@ int main() {
             }
             case 4: { // Agregar ingredientes
                     cout << "\n------------------------------------------\nQue ingredientes quieres agregar?\n------------------------------------------\n";
+                     cout << setw(3) << "ID"
+                    << setw(20) << "Nombre"
+                    << setw(20) << "Costo\n";
                     for (size_t i = 0; i < inventario.size(); ++i) {
-                        cout << i + 1 << ".\t" << inventario[i].nombre << "\n";
+                        cout << setw(3) << i + 1 << ". "
+                        << setw(20) << inventario[i].nombre 
+                        << setw(10) << inventario[i].costo
+                        << setw (10) << "por"
+                        << setw (10) << inventario[i].unidad << "\n";
                     }
                     cout << "------------------------------------------\n";
                     size_t seleccion;
@@ -178,30 +238,39 @@ int main() {
                 cin >> seleccionPizza;
                 if(seleccionPizza < 1 || seleccionPizza > pizzas.size()) {
                     cout << "Opción no válida.\n";
-                    break;
+                break;
                 }
                 bool ingredientesDisponibles = true;
+                float costoTotalIngredientes = 0.0;
+
+                // Verificar disponibilidad de ingredientes y calcular el costo total necesario
                 for (const auto& ing : pizzas[seleccionPizza - 1].ingredientes) {
-                    if (inventario[ing.first - 1].cantidad < ing.second) {
-                    cout << "Faltan " << ing.second - inventario[ing.first - 1].cantidad << " " << inventario[ing.first - 1].unidad << " de " << inventario[ing.first - 1].nombre << ".\n";
-                    ingredientesDisponibles = false;
+                    float cantidadNecesaria = ing.second;
+                    float cantidadActual = inventario[ing.first - 1].cantidad;
+                if (cantidadActual < cantidadNecesaria) {
+                        cout << "Faltan " << cantidadNecesaria - cantidadActual << " " << inventario[ing.first - 1].unidad << " de " << inventario[ing.first - 1].nombre << ".\n";
+                        ingredientesDisponibles = false;
+                        costoTotalIngredientes += (cantidadNecesaria - cantidadActual) * inventario[ing.first - 1].costo;
                     }
                 }
-                if (ingredientesDisponibles) {
-                for (const auto& ing : pizzas[seleccionPizza - 1].ingredientes) {
-                    inventario[ing.first - 1].cantidad -= ing.second;
-                }
-                saldo += pizzas[seleccionPizza - 1].costo;
-                cout << "La pizza " << pizzas[seleccionPizza - 1].nombre << " está en el horno.\n";
-                cout << "Se agregaron $" << pizzas[seleccionPizza - 1].costo << " al saldo.\n";
-                string descripcionHistorial = "Se cocinó " + pizzas[seleccionPizza - 1].nombre + " " + pizzas[seleccionPizza - 1].tamaño + ". Se agregaron $" + to_string(pizzas[seleccionPizza - 1].costo) + " al capital.";
-                historial.push_back({descripcionHistorial, chrono::system_clock::now()});
-                }
-                else {
-                    cout << "No se puede cocinar la pizza por falta de ingredientes.\n";
-                }
-                break;
-            }
+
+    if (ingredientesDisponibles) {
+        // Cocinar la pizza si todos los ingredientes están disponibles
+        for (const auto& ing : pizzas[seleccionPizza - 1].ingredientes) {
+            inventario[ing.first - 1].cantidad -= ing.second;
+        }
+        saldo += pizzas[seleccionPizza - 1].costo;
+        cout << "La pizza " << pizzas[seleccionPizza - 1].nombre << " está en el horno.\n";
+        cout << "Se agregaron $" << pizzas[seleccionPizza - 1].costo << " al saldo.\n";
+        string descripcionHistorial = "Se cocinó " + pizzas[seleccionPizza - 1].nombre + " " + pizzas[seleccionPizza - 1].tamaño + ". Se agregaron $" + to_string(pizzas[seleccionPizza - 1].costo) + " al capital.";
+        historial.push_back({descripcionHistorial, chrono::system_clock::now()});
+    } else {
+        // Mostrar el costo total para comprar los ingredientes faltantes
+        cout << "No se puede cocinar la pizza por falta de ingredientes.\n";
+        cout << "Se necesita invertir $" << costoTotalIngredientes << " para comprar los ingredientes faltantes.\n";
+    }
+    break;
+}
             case 6: { // Gestionar caducidad
                 break;
             }
@@ -217,6 +286,13 @@ int main() {
                 break;
             }
             case 8: { // Buscar
+                cin.ignore(); // Limpiar el buffer de entrada
+                // Obtener fechas desde y hasta el usuario
+                chrono::system_clock::time_point desde = obtenerFechaUsuario("Ingrese la fecha desde");
+                chrono::system_clock::time_point hasta = obtenerFechaUsuario("Ingrese la fecha hasta");
+
+                // Búsqueda en el historial por rango de fechas
+                buscarEnHistorial(desde, hasta);
                 break;
             }
             default:
