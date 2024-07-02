@@ -252,6 +252,12 @@ int main() {
     int cantidad;
     cout << "Cuántos(as) " << inventario[seleccion - 1].unidad << " deseas agregar? ";
     cin >> cantidad;
+    // Validar que la cantidad no sea negativa
+    if (cantidad <= 0) {
+        cout << "Cantidad inválida. Debes agregar una cantidad positiva de " << inventario[seleccion - 1].unidad << ".\n";
+        break;
+    }
+
     
     // Calcular el costo total del ingrediente
     float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
