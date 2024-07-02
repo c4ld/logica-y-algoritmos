@@ -141,15 +141,16 @@ int main() {
         cout << "Menu principal\n";
         cout << "-----------------------------\n";
         cout << "Saldo: "<< saldo <<"\n";
+        cout << "\n-------Modificar Saldo-------\n";
         cout << "1.\tAgregar saldo\n";
-        cout << "2.\tRestar saldo\n\n";
-
+        cout << "2.\tRestar saldo\n";
+        cout << "\n----------Inventario----------\n";
         cout << "3.\tRevisar stock\n";
         cout << "4.\tComprar ingredientes\n";
         cout << "5.\tCocinar\n";
-
+        cout << "\n-----------Historial-----------\n";
         cout << "6.\tHistorial\n";
-        cout << "7.\tBuscar\n\n";
+        cout << "7.\tBuscar\n";
 
         cout << "0.\tSalir\n";
         cout << "-----------------------------\n";
@@ -160,19 +161,43 @@ int main() {
                 float agregar;
                 cout << "Ingrese la cantidad a agregar: ";
                 cin >> agregar;
-                saldo += agregar;
-                string descripcionHistorial = "Se agrego " + to_string(agregar) + " al saldo.";
-                historial.push_back({descripcionHistorial, chrono::system_clock::now()});
-                break;
+                if(agregar <= 0)
+                {
+                    cout << "Introduzca una cantidad valida" << endl;
+                    break;
+                }
+                else
+                {
+                    saldo += agregar;
+                    string descripcionHistorial = "Se agrego " + to_string(agregar) + " al saldo.";
+                    historial.push_back({descripcionHistorial, chrono::system_clock::now()});
+                    break;
+                }
             }
             case 2: { // Restar saldo
                 float restar;
                 cout << "Ingrese la cantidad a restar: ";
                 cin >> restar;
-                saldo -= restar;
-                string descripcionHistorial = "Se resto " + to_string(restar) + " al saldo.";
-                historial.push_back({descripcionHistorial, chrono::system_clock::now()});
-                break;
+                if(restar <= 0)
+                {
+                    cout << "Introduzca una cantidad valida" << endl;
+                    break;
+                }
+                else
+                {
+                    if(restar > saldo)
+                    {
+                        cout << "Se esta retirando mas saldo de lo que se tiene!" << endl;
+                        break;
+                    }
+                    else
+                    {
+                        saldo -= restar;
+                        string descripcionHistorial = "Se resto " + to_string(restar) + " al saldo.";
+                        historial.push_back({descripcionHistorial, chrono::system_clock::now()});
+                        break;
+                    }
+                }
             }
             case 3: { // Revisar inventario
                     cout << "\n----------------------------------------------------------\n";
@@ -221,7 +246,6 @@ int main() {
                     agregarUnidades(inventario, seleccion - 1, cantidad);
                     // Restar el capital
                     float costoIngrediente = inventario[seleccion - 1].costo * cantidad;
-                    saldo -= costoIngrediente;
                     cout << "Se restaron $" << costoIngrediente << " del capital.\n";
                 break;
             }
